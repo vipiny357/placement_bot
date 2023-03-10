@@ -22,6 +22,10 @@ URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
 
 URL_Placement = "https://www.aitplacements.in/api/trpc/notice.publishedNoticeList?batch=1&input=%7B%220%22%3A%7B%22pageNos%22%3A1%7D%7D"
 
+URL_Website = "https://www.aitplacements.in/dashboard"
+
+website_text = f"Please check the aitplacement website for more details {URL_Website}"
+
 list_of_notices1 = [0]
 
 while True:
@@ -60,6 +64,8 @@ while True:
             f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={body}")
         request_telegram = requests.get(
             f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={attachment}")
+        request_telegram = requests.get(
+            f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={website_text}")
 
         list_of_notices1 = list_of_notices
 
