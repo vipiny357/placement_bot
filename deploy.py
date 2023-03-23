@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 from requests.structures import CaseInsensitiveDict
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
 
 project_folder = os.path.expanduser('')
 load_dotenv(os.path.join(project_folder, '.env'))
@@ -54,19 +55,42 @@ while True:
         [xy] = y.json()
         mm = xy['result']['data']
 
-        body = mm.get('body')
-        attachment = mm.get('attachments')
+        pre_body = mm.get('body')
+        soup = BeautifulSoup(pre_body, "html.parser")
+        body = soup.get_text()
+        body = body.replace('%', '\\%25')
+        body = body.replace('#', '\\%23')
+        body = body.replace('+', '\\%2B')
+        body = body.replace('*', '\\%2A')
+        body = body.replace('&', '\\%26')
+
         name_of_notice = list_of_notices[i]
 
         request_telegram = requests.get(
             f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={name_of_notice}")
         request_telegram = requests.get(
             f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={body}")
-        request_telegram = requests.get(
-            f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={attachment}")
+
+        pre_attachment = mm.get('attachments')
+        if pre_attachment == []:
+            attachment = pre_attachment
+            request_telegram = requests.get(
+                f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={attachment}")
+        else:
+            for i in range(len(pre_attachment)):
+                attachment = pre_attachment[i].get("url")
+                attachment = attachment.replace('%', '\\%25')
+                attachment = attachment.replace('#', '\\%23')
+                attachment = attachment.replace('+', '\\%2B')
+                attachment = attachment.replace('*', '\\%2A')
+                attachment = attachment.replace('&', '\\%26')
+
+                request_telegram = requests.get(
+                    f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={attachment}")
+
         request_telegram = requests.get(
             f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={website_text}")
 
         list_of_notices1 = list_of_notices
 
-    time.sleep(15*60)
+    time.sleep(5*60)
