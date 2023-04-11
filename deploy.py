@@ -58,13 +58,18 @@ while True:
         pre_body = mm.get('body')
         soup = BeautifulSoup(pre_body, "html.parser")
         body = soup.get_text()
-        body = body.replace('%', '\\%25')
-        body = body.replace('#', '\\%23')
-        body = body.replace('+', '\\%2B')
-        body = body.replace('*', '\\%2A')
-        body = body.replace('&', '\\%26')
+        body = body.replace('%', '%25')
+        body = body.replace('#', '%23')
+        body = body.replace('+', '%2B')
+        body = body.replace('*', '%2A')
+        body = body.replace('&', '%26')
 
-        name_of_notice = list_of_notices[i]
+        name_of_notice = list_of_notices[i][0]
+        name_of_notice = name_of_notice.replace('%', '%25')
+        name_of_notice = name_of_notice.replace('#', '%23')
+        name_of_notice = name_of_notice.replace('+', '%2B')
+        name_of_notice = name_of_notice.replace('*', '%2A')
+        name_of_notice = name_of_notice.replace('&', '%26')
 
         request_telegram = requests.get(
             f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={name_of_notice}")
@@ -79,11 +84,11 @@ while True:
         else:
             for i in range(len(pre_attachment)):
                 attachment = pre_attachment[i].get("url")
-                attachment = attachment.replace('%', '\\%25')
-                attachment = attachment.replace('#', '\\%23')
-                attachment = attachment.replace('+', '\\%2B')
-                attachment = attachment.replace('*', '\\%2A')
-                attachment = attachment.replace('&', '\\%26')
+                attachment = attachment.replace('%', '%25')
+                attachment = attachment.replace('#', '%23')
+                attachment = attachment.replace('+', '%2B')
+                attachment = attachment.replace('*', '%2A')
+                attachment = attachment.replace('&', '%26')
 
                 request_telegram = requests.get(
                     f"{URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={attachment}")
@@ -93,4 +98,4 @@ while True:
 
         list_of_notices1 = list_of_notices
 
-    time.sleep(5*60)
+    time.sleep(7*60)
